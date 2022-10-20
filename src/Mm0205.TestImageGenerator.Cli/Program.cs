@@ -1,12 +1,11 @@
 ﻿using System.CommandLine;
-using System.IO.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Mm0205.TestImageGenerator.Cli.App.Intentions;
 using Mm0205.TestImageGenerator.Cli.App.Intentions.Handlers;
 using Mm0205.TestImageGenerator.Cli.Domain.Interfaces;
 using Mm0205.TestImageGenerator.Cli.Domain.Services;
+using Mm0205.TestImageGenerator.Cli.Infra;
 using Mm0205.TestImageGenerator.Cli.Infra.Commands;
-using Mm0205.TestImageGenerator.Cli.Infra.Commands.Copies;
 using Mm0205.TestImageGenerator.Cli.Infra.Io;
 
 var serviceCollection = new ServiceCollection();
@@ -19,21 +18,7 @@ serviceCollection.AddScoped<FileNameRuleService>();
 serviceCollection.AddScoped<ICopyFileIntentionHandler, CopyFileIntentionHandler>();
 
 // Infraレイヤー
-serviceCollection.AddSingleton<IFileSystem, FileSystem>();
-serviceCollection.AddScoped<RootCommandBuilder>();
-serviceCollection.AddScoped<CopyCommandHandler>();
-serviceCollection.AddScoped<CopyCommandBuilder>();
-serviceCollection.AddScoped<Func<IEnumerable<ISubCommandBuilder>>>((sp) =>
-{
-    return () =>
-    {
-        var result = new List<ISubCommandBuilder>
-        {
-            sp.GetRequiredService<CopyCommandBuilder>()
-        };
-        return result;
-    };
-});
+serviceCollection.AddInfra();
 
 
 var serviceProvider = serviceCollection.BuildServiceProvider();

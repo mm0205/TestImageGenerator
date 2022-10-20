@@ -13,19 +13,23 @@ public class CopyCommandHandler
 {
     private readonly IFileSystem _fileSystem;
     private readonly ICopyFileIntentionHandler _handler;
+    private readonly IErrorShower _errorShower;
 
     /// <summary>
     /// コンストラクタ。
     /// </summary>
     /// <param name="fileSystem">ファイルシステム。</param>
     /// <param name="handler">インテンションハンドラー。</param>
+    /// <param name="errorShower">エラー表示。</param>
     public CopyCommandHandler(
         IFileSystem fileSystem,
-        ICopyFileIntentionHandler handler
+        ICopyFileIntentionHandler handler,
+        IErrorShower errorShower
     )
     {
         _fileSystem = fileSystem;
         _handler = handler;
+        _errorShower = errorShower;
     }
 
     /// <summary>
@@ -36,7 +40,7 @@ public class CopyCommandHandler
         var intention = CreateIntention(arguments);
         if (intention.IsFailed)
         {
-            await ShowErrorsAsync(intention.Errors);
+            await _errorShower.ShowErrorsAsync(intention.Errors);
             return;
         }
 
@@ -77,13 +81,5 @@ public class CopyCommandHandler
             outputCount.Value,
             startIndex.Value
         );
-    }
-
-    private static async Task ShowErrorsAsync(List<IError> errors)
-    {
-        foreach (var e in errors)
-        {
-            await Console.Error.WriteLineAsync(e.ToString());
-        }
     }
 }
