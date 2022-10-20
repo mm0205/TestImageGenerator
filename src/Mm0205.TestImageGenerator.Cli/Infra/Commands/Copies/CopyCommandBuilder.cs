@@ -1,5 +1,6 @@
 using System.CommandLine;
 using System.IO.Abstractions;
+using Mm0205.TestImageGenerator.Cli.Infra.Commands.Common;
 
 namespace Mm0205.TestImageGenerator.Cli.Infra.Commands.Copies;
 
@@ -27,7 +28,6 @@ public class CopyCommandBuilder : ISubCommandBuilder
 
     public Command Build()
     {
-        var command = new Command(Name, Description);
 
         var sourceOption = new Option<string>(
             name: "--source",
@@ -36,7 +36,6 @@ public class CopyCommandBuilder : ISubCommandBuilder
             IsRequired = true
         };
         sourceOption.AddAlias("-s");
-        command.AddOption(sourceOption);
 
         var destOption = new Option<string>(
             name: "--destination",
@@ -46,20 +45,17 @@ public class CopyCommandBuilder : ISubCommandBuilder
                 "out"
             ));
         destOption.AddAlias("-d");
-        command.AddOption(destOption);
 
-        var countOption = new Option<int>(
-            name: "--count",
-            description: "コピー数 [default: 10]",
-            getDefaultValue: () => 10);
-        countOption.AddAlias("-c");
-        command.AddOption(countOption);
-
-        var startIndexOption = new Option<int>(
-            name: "--start",
-            description: "開始番号 [default: 1]",
-            getDefaultValue: () => 1);
-        command.AddOption(startIndexOption);
+        var countOption = OutputImageCountOptionBuilder.Build();
+        var startIndexOption = OutputStartIndexOptionBuilder.Build();
+        
+        var command = new Command(Name, Description)
+        {
+            sourceOption,
+            destOption,
+            countOption,
+            startIndexOption
+        };
 
         command.SetHandler(async (sourcePath, destPath, count, startIndex) =>
             {
