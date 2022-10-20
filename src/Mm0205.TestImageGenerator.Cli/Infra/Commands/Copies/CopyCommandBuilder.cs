@@ -37,15 +37,7 @@ public class CopyCommandBuilder : ISubCommandBuilder
         };
         sourceOption.AddAlias("-s");
 
-        var destOption = new Option<string>(
-            name: "--destination",
-            description: "出力先フォルダパス [default: ./out]",
-            getDefaultValue: () => _fileSystem.Path.Combine(
-                _fileSystem.Directory.GetCurrentDirectory(),
-                "out"
-            ));
-        destOption.AddAlias("-d");
-
+        var destOption = DestinationFolderPathOptionBuilder.Build(_fileSystem);
         var countOption = OutputImageCountOptionBuilder.Build();
         var startIndexOption = OutputStartIndexOptionBuilder.Build();
         

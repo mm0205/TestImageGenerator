@@ -1,5 +1,4 @@
 using System.IO.Abstractions;
-using Mm0205.TestImageGenerator.Cli.Domain;
 using Mm0205.TestImageGenerator.Cli.Domain.Services;
 
 namespace Mm0205.TestImageGenerator.Cli.App.Intentions.Handlers;
