@@ -16,6 +16,7 @@ serviceCollection.AddScoped<FileNameRuleService>();
 
 // App レイヤー
 serviceCollection.AddScoped<ICopyFileIntentionHandler, CopyFileIntentionHandler>();
+serviceCollection.AddScoped<ICreateJpegIntentionHandler, CreateJpegIntentionHandler>();
 
 // Infraレイヤー
 serviceCollection.AddInfra();
